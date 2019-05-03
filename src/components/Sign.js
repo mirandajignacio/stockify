@@ -1,49 +1,75 @@
-import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik } from "formik";
 import signSchema from "../schemas/signSchema";
+import Input from "./Input";
+import Form from "./Form";
+import Papper from "./Papper";
+import Button from "./Button";
 import styled from "styled-components";
 
-const Input = styled.input`
-  width: 300px;
-  height: 35px;
-  border: 1px solid #ccc;
-  background-color: #fff;
+const Label = styled.label`
+  display: flex;
+  flex-direction: column;
+  color: #777;
+  font-family: "Raleway", sans-serif;
+  font-size: 0.8em;
+  /* margin-left: 12px; */
+  /* margin: 0.5em 0; */
+  /* position: relative; */
 `;
 
 const Sign = () => (
-  <div>
-    <Formik
-      initialValues={{ username: "", password: "" }}
-      validationSchema={signSchema}
-      onSubmit={async (values, { setStatus, setSubmitting }) => {
-        setStatus(null);
-        // Request to backend
-        setTimeout(() => {
-          setStatus("Datos invalidos.");
-          setSubmitting(false);
-        }, 1000);
-        // Valid user ? redirect : setStatus error
-      }}
-    >
-      {({ isSubmitting, isValidating, status, touched }) => (
-        <Form>
-          {console.log("touched", touched)}
-          <Field
-            name="username"
-            render={({ field, form: { isSubmitting } }) => (
-              <Input {...field} disabled={isSubmitting} type="text" />
-            )}
+  <Formik
+    initialValues={{ username: "", password: "" }}
+    validationSchema={signSchema}
+    onSubmit={async (values, { setStatus, setSubmitting }) => {
+      setStatus(null);
+      // Step 1. Request to backend
+      // Step 2. Valid user ? redirect : setStatus error
+      setTimeout(() => {
+        setStatus("Datos invalidos.");
+        setSubmitting(false);
+      }, 1000);
+    }}
+  >
+    {({
+      isSubmitting,
+      isValidating,
+      status,
+      handleChange,
+      touched,
+      errors,
+      values,
+      handleBlur,
+      handleSubmit
+    }) => (
+      <Papper>
+        <Form onSubmit={handleSubmit}>
+          <Label>
+            {touched.username && errors.username && <p>{errors.username}</p>}
+            <Input
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.username}
+              name="username"
+              placeholder="Nombre de usuario"
+            />
+          </Label>
+          {touched.password && errors.password && <p>{errors.password}</p>}
+          <Input
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.password}
+            name="password"
+            placeholder="Contraseña"
           />
-          <ErrorMessage name="username" component="div" />
-          <Field type="password" name="password" />
-          <ErrorMessage name="password" component="div" />
           {status ? <p>{status}</p> : null}
-          <button type="submit" disabled={isSubmitting}>
+          {isValidating ? <p>Validando</p> : null}
+          <Button type="submit" disabled={isSubmitting}>
             INGRESAR
-          </button>
+          </Button>
         </Form>
-      )}
-    </Formik>
-  </div>
+      </Papper>
+    )}
+  </Formik>
 );
 export default Sign;
