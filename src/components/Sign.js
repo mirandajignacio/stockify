@@ -5,6 +5,7 @@ import Form from "./Form";
 import Papper from "./Papper";
 import Button from "./Button";
 import styled from "styled-components";
+import FullInput from "./FullInput";
 
 const Label = styled.label`
   display: flex;
@@ -54,14 +55,23 @@ const Sign = () => (
               placeholder="Nombre de usuario"
             />
           </Label>
-          {touched.password && errors.password && <p>{errors.password}</p>}
-          <Input
+          {/* {touched.password && errors.password && <p>{errors.password}</p>} */}
+          {/* <Input
             onChange={handleChange}
             onBlur={handleBlur}
             value={values.password}
             name="password"
             placeholder="Contraseña"
-          />
+          /> */}
+
+          <FullInput
+          touched={touched.password}  
+          errors={errors.password}
+          onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.password}
+            name="password"
+            placeholder="Contraseña"></FullInput>
           {status ? <p>{status}</p> : null}
           {isValidating ? <p>Validando</p> : null}
           <Button type="submit" disabled={isSubmitting}>
